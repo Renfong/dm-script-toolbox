@@ -1,17 +1,17 @@
 // Lattice enhanced filter
 // Reference : Ondrej L. Krivanek et. al., Nature 464, 571-574
 //
-//	Version 2
-//	This filter can enhance the lattice feature and without remove background.
+//	Version 3
+//	The filter enhance the lattice feature without removing background.
 //	Set the weight factor in the background and high frequency region  = 1
 //	And the weight factor of the enhanced feature  = 3.5
 //	
 //	The first window will show the radial average of the FFT of the image
 //	enhanced feature (look for the peak) then key the value into the window
 //
-// 2016/12/20
+// 2021/03/17
 // Renfong
-// dm-script@windless@gmail.com
+// windless@gmail.com
 
 
 
@@ -82,12 +82,37 @@ image GaussianBlur(image sourceimg, number standarddev)
 
 
 // Main function
-image LatticeEnhancedFilter(image img, number mu, number f0)
-// LatticeEnhancedFilter(image img, number mu, number f0)
-// img : input image
-//  mu : lattice component (unit: pixel)
-//  f0 : background region (unit: pixel)
+image LatticeEnhancedFilter(image img)
 {
+	// LatticeEnhancedFilter(image img, number mu, number f0)
+	// img : input image
+	
+	// Determine the enhanced component
+	image fft_img=RealFFT(img)
+	number dp_sx, dp_sy
+	fft_img.GetSize(dp_sx,dp_sy)
+	image LP1
+
+	//  Display the DP radial average
+	if(dp_sx>1024)
+	{
+		LP1=Rotational_Average(fft_img)[0,0,1,round(dp_sx/4)]
+	}
+	else
+	{
+		LP1=Rotational_Average(fft_img)
+	}
+
+	LP1[0,0,1,8]=0
+	LP1.setname("radial average of DP")
+	LP1.showimage()
+
+	// parameter input
+	number f0, mu
+	GetNumber("Select enhanced center",30,mu)
+	f0=10
+	result("mu="+mu+", f0="+f0+"\n")
+	LP1.DeleteImage()
 	// Set parameters
 	number sig=sqrt((mu-f0)**2/2.50553)
 	number sx, sy
@@ -113,43 +138,20 @@ image LatticeEnhancedFilter(image img, number mu, number f0)
 	// LP_filimg2.showimage()
 
 	// Apply mask
-	image fft_mask_img=RealFFT(img)*filimg2
-	image mask_img=RealIFFT(fft_mask_img)
+	image fft_mask_img = RealFFT(img)*filimg2
+	image mask_img = RealIFFT(fft_mask_img)
+	
+	// copy calibration info
+	string str = img.GetName()
+	mask_img.setname(str+"Lattice-Enhanced-FilterV2")
+	mask_img.ImageCopyCalibrationFrom(img)
+	
 	return mask_img
 }
 
 // main script
-image img:=getfrontimage()
-image fft_img=RealFFT(img)
-number dp_sx, dp_sy
-fft_img.GetSize(dp_sx,dp_sy)
-image LP1
-
-//  Display the DP radial average
-if(dp_sx>1024)
 {
-	LP1=Rotational_Average(fft_img)[0,0,1,round(dp_sx/4)]
+	image img := getfrontimage()
+	image filtered := LatticeEnhancedFilter(img)
+	filtered.showimage()
 }
-else
-{
-	LP1=Rotational_Average(fft_img)
-}
-
-LP1[0,0,1,8]=0
-LP1.setname("radial average of DP")
-LP1.showimage()
-
-// parameter input
-number f0, mu
-GetNumber("Select enhanced center",30,mu)
-f0=10
-result("mu="+mu+", f0="+f0+"\n")
-LP1.DeleteImage()
-image LE_img=LatticeEnhancedFilter(img,mu,f0)
-
-
-// copy calibration info
-string str=img.GetName()
-LE_img.setname(str+"Lattice-Enhanced Mask2")
-LE_img.ImageCopyCalibrationFrom(img)
-LE_img.showimage()
