@@ -2,7 +2,7 @@
 image src := GetFrontImage()
 
 if (src.ImageGetNumDimensions() < 3 ) {
-	result("dimension : " + src.ImageGetNumDimensions() + "\n")
+	result("dimension : " + src.ImageGetNumDimensions() + "")
 	result("Not a 3D image, exit the process...")
 	exit(0)
 };
