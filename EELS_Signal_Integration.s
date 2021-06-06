@@ -16,6 +16,7 @@ number Eorignal, Estep
 Eorignal = src.ImageGetDimensionOrigin(2)
 Estep = src.ImageGetDimensionScale(2)
 
+TagGroup srcTag = src.ImageGetTagGroup()
 
 // comput the EELS background and then extract the signal
 number bEs = 1500	// unit: eV
@@ -25,7 +26,7 @@ image signal := EELSSubtractPowerLawBackground(src, bEs, bEe)
 
 // Integral the EELS signal
 // set parameter
-number edge = 1850		// unit:eV
+number edge = 1850	// unit:eV
 number Eintegal = 200	// unit: eV
 
 // Get the Energy axis
@@ -45,6 +46,7 @@ image SignalInt := signal.slice3(0,0,Echannelx,0,sx,1,1,sy,1,2,round(Eintegal/Es
 SignalInt.SetName("Signal SI")
 //SignalInt.ShowImage()
 
-image SignalProj = Project(SignalInt,2)
+image SignalProj := Project(SignalInt,2)
 SignalProj.SetName("Signal")
+SignalProj.ImageGetTagGroup().TagGroupCopyTagsFrom(srcTag)
 SignalProj.ShowImage()
