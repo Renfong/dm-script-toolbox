@@ -139,12 +139,12 @@ image LatticeEnhancedFilter(image img)
 
 	// Apply mask
 	image fft_mask_img = RealFFT(img)*filimg2
-	image mask_img = RealIFFT(fft_mask_img)
+	image mask_img := img.ImageClone()
+	mask_img = RealIFFT(fft_mask_img)
 	
 	// copy calibration info
 	string str = img.GetName()
 	mask_img.setname(str+"Lattice-Enhanced-FilterV2")
-	mask_img.ImageCopyCalibrationFrom(img)
 	
 	return mask_img
 }
