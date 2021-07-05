@@ -18,8 +18,9 @@
 // sub-function1 : radial average
 // This script is retrived and  modified from 
 // http://www.gatan.com/sites/default/files/Scripts/Rotational%20Average.s
-image Rotational_Average(image img)
-{
+
+
+image Rotational_Average(image img)	{
 	// Define neccessary parameters and constants
 	number xscale, yscale, xsize, ysize
 	number centerx, centery, halfMinor
@@ -28,7 +29,7 @@ image Rotational_Average(image img)
 
 	// Likewise, declare intermediate images
 	image rotational_average, dst, line_projection
-	
+
 	// If the source image is complex, take the modulus						
 	if ( img.ImageIsDataTypeComplex( ))
 		img := modulus(img)
@@ -54,36 +55,34 @@ image Rotational_Average(image img)
 	line_projection /= xsize
 	line_projection.ImageCopyCalibrationFrom(img)
 	return line_projection
-}
+};
 
 // sub-function2 : Gaussian blur
 // http://www.dmscripting.com/files/Gaussian_Blur.s
-image GaussianBlur(image sourceimg, number standarddev)
-	{
-		if(standarddev<=0) return sourceimg
-		
-		number xsize, ysize
-		getsize(sourceimg, xsize, ysize)
+image GaussianBlur(image sourceimg, number standarddev)	{
+	if(standarddev<=0) return sourceimg
 
-		// Create the gaussian kernel using the same dimensions as the expanded image
-		image kernelimg:=realimage("",4,xsize,ysize)
-		kernelimg=1/(2*pi()*standarddev**2)*exp(-1*(iradius**2/(2*standarddev**2)))
+	number xsize, ysize
+	getsize(sourceimg, xsize, ysize)
+
+	// Create the gaussian kernel using the same dimensions as the expanded image
+	image kernelimg:=realimage("",4,xsize,ysize)
+	kernelimg=1/(2*pi()*standarddev**2)*exp(-1*(iradius**2/(2*standarddev**2)))
 
 
-		// Carry out the convolution in Fourier space
-		compleximage fftkernelimg:=realFFT(kernelimg)
-		compleximage FFTSource:=realfft(sourceimg)
-		compleximage FFTProduct:=FFTSource*fftkernelimg.modulus().sqrt()
-		realimage invFFT:=realIFFT(FFTProduct)
-		invFFT=(invFFT-min(invFFT))/(max(invFFT)-min(invFFT))
-		invFFT=(max(sourceimg)-min(sourceimg))*invFFT+min(sourceimg)
-		return invFFT
-	}
+	// Carry out the convolution in Fourier space
+	compleximage fftkernelimg:=realFFT(kernelimg)
+	compleximage FFTSource:=realfft(sourceimg)
+	compleximage FFTProduct:=FFTSource*fftkernelimg.modulus().sqrt()
+	realimage invFFT:=realIFFT(FFTProduct)
+	invFFT=(invFFT-min(invFFT))/(max(invFFT)-min(invFFT))
+	invFFT=(max(sourceimg)-min(sourceimg))*invFFT+min(sourceimg)
+	return invFFT
+};
 
 
 // Main function
-image LatticeEnhancedFilter(image img)
-{
+image LatticeEnhancedFilter(image img)	{
 	// LatticeEnhancedFilter(image img, number mu, number f0)
 	// img : input image
 	
@@ -147,11 +146,11 @@ image LatticeEnhancedFilter(image img)
 	mask_img.setname(str+"Lattice-Enhanced-FilterV2")
 	
 	return mask_img
-}
+};
 
 // main script
 {
-	image img := getfrontimage()
+	image img := GetFrontImage()
 	image filtered := LatticeEnhancedFilter(img)
 	filtered.showimage()
 }
