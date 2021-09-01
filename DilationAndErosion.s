@@ -8,7 +8,7 @@ number win = 1
 number sx, sy
 src.GetSize(sx, sy)
 image stack = RealImage("offset_stack",4,sx,sy,(2*win+1)**2)
-//stack.ShowImage()
+
 number count=0
 for (number i= -1*win; i<= win; i++){
 	for (number j= -1*win; j<= win; j++){
@@ -22,8 +22,8 @@ image projz = project(stack,2)
 image dilation = (projz>0)
 dilation.SetName("dilation")
 dilation.ShowImage()
-image erosion = (projz>=(2*win+1)**2)
 
+image erosion = (projz>=(2*win+1)**2)
 erosion.SetName("erosion")
 erosion.ShowImage()
 
