@@ -81,4 +81,8 @@ stack[icol,1] = FitResult1
 stack[icol,2] = FitResult2
 ImageDocument StackDoc = CreateImageDocument("Fitting result")
 ImageDisplay StackDisp = StackDoc.ImageDocumentAddImageDisplay(stack, 3)
+StackDisp.ImageDisplaySetSliceLabelByIndex( 0 , "Input data" )
+StackDisp.ImageDisplaySetSliceLabelByIndex( 1 , "1st order fitting" )
+StackDisp.ImageDisplaySetSliceLabelByIndex( 2 , "2nd order fitting" )
+StackDisp.LinePlotImageDisplaySetLegendShown( 1 )
 StackDoc.ImageDocumentShow()
