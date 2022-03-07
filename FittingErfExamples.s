@@ -1,18 +1,17 @@
 Image FitErfFunc(Image input, Image fitrange, number cen, Image &pars){
-	// formula : p0*0.5*(1+erf((x-p2)/(sqrt(2)*p1)))
-	// amp    p0 : GetPixel(pars,0,0)
-	// sigma  p1 : GetPixel(pars,1,0)
-	// center p2 : GetPixel(pars,2,0)
+	// formula : 0.5*(1+erf((x-p1)/(sqrt(2)*p0)))
+	// sigma  p0 : GetPixel(pars,0,0)
+	// center p1 : GetPixel(pars,1,0)
 	
 	// setup fit:
-	pars := NewImage("pars", 2, 3)
-	Image parsToFit := NewImage("pars to fit", 2, 3)
+	pars := NewImage("pars", 2, 2)
+	Image parsToFit := NewImage("pars to fit", 2, 2)
 	pars = 10;          // starting values
-	pars.SetPixel(2,0,cen)
+	pars.SetPixel(1,0,cen)
 	parsToFit = 1;
 	Number chiSqr = 1e6
 	Number conv_cond = 0.00001
-	String formulaStr = "p0*0.5*(1+erf((x-p2)/(sqrt(2)*p1)))"
+	String formulaStr = "0.5*(1+erf((x-p1)/(sqrt(2)*p0)))"
 	Number ok = FitFormula(formulaStr, input, fitrange, pars, parsToFit, chiSqr, conv_cond)
 
 	Image FitResult := PlotFormula(formulaStr, input, pars)
@@ -41,9 +40,8 @@ Image FitResult1 := FitErfFunc(input, fitrange,50, pars)
 
 // fit range2
 fitrange = tert(icol>75, max(input), 0)
-fitrange.showImage()
 Image FitResult2 := FitErfFunc(1-input, fitrange,100, pars)
-FitResult2 = GetPixel(pars,0,0)-FitResult2
+FitResult2 = 1-FitResult2
 
 Image stack := NewImage("Fitting stack", 2, 150, 3)
 stack[icol,0] = input
