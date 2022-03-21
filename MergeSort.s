@@ -1,3 +1,8 @@
+// Merge sort in dm-script
+//
+// Renfong
+// 2022/03/20
+
 Image merge(Image left, Image right){
 	number dl = left.ImageGetDimensionSize(0)
 	number dr = right.ImageGetDimensionSize(0)
