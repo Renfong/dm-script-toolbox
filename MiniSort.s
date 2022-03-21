@@ -1,3 +1,8 @@
+// sort an array or an image by the min function
+//
+// Renfong
+// 2022/03/21
+
 Image miniSort(Image src){
 	number d0 = src.ImageGetDimensionSize(0)
 	number d1 = src.ImageGetDimensionSize(1)
