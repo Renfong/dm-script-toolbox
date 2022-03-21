@@ -1,3 +1,8 @@
+// Do error function fitting with two different parameters
+// 
+// Renfong
+// 2022/03/08
+
 Image FitErfFunc(Image input, Image fitrange, number cen, Image &pars){
 	// formula : 0.5*(1+erf((x-p1)/(sqrt(2)*p0)))
 	// sigma  p0 : GetPixel(pars,0,0)
