@@ -39,17 +39,16 @@ void FittingStack(Image input, Image fitResult, String label){
 
 //example
 Image img := NewImage("1st order",2,256)
-img = 10 + 2*icol -2*icol**2 + 0.3*icol**3
-
+img = 10 - 0.2*icol -0.63*icol**2 + 0.037*icol**3
 
 Image fitRange := img.ImageClone()
 fitRange = 1
-for(number i=1;i<=4;i++){
+for(number i=1;i<=5;i++){
 	Image pars
 	Image fitResult := PolyFit(img, fitRange, i, pars)
-	string label = "Fitting formula : "+pars.GetPixel(0,0).format("%.2f")
+	string label = "Fitting formula : "+pars.GetPixel(0,0).format("%.3f")
 	for(number j=1;j<=i; j++){
-		label += "+"+pars.GetPixel(j,0).format("%.2f")+"*x^"+j
+		label += "+"+pars.GetPixel(j,0).format("%.3f")+"*x^"+j
 	}
 	FittingStack(img, fitResult, label)
 }
