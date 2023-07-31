@@ -17,7 +17,7 @@ TagGroup tgComp = NewTagList()
 for (number i=0; i<ncomp; i++){
 	component marker = srcDisp.ComponentGetChild( i )
 	TagGroup tgInfo = NewTagGroup()
-	number compType = srcDisp.ComponentGetType()
+	number compType = marker.ComponentGetType()
 	if (compType==kLINEPROFILEMARKER){
 		number markerID = marker.ComponentGetID()
 		number x1, y1, x2, y2, width, dummy
